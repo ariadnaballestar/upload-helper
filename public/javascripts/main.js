@@ -4,7 +4,7 @@ Dropzone.options.myDropzone = {
       if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
         console.log('todo subido');
       }
-    });
+    }); 
   }, */
   init: function () {
     this.on("queuecomplete", function (file) {
@@ -19,7 +19,7 @@ Dropzone.options.myDropzone = {
 
         //var portadapic = $('input[name=defaultPic]:checked', '#myDropzone').val();
         //alert(portadapic);
-        
+
         $.ajax({
             type: "POST",
             url: "/download",
