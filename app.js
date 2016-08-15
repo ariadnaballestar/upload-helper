@@ -1,4 +1,5 @@
 var fs = require('fs');
+var gm = require('gm').subClass({imageMagick: true});;
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -43,20 +44,46 @@ app.use('/users', users);
 
 
 app.post( '/upload', upload.single( 'file' ), function( req, res, next ) {
-  // Metadata about the uploaded file can now be found in req.file
-  function fileFilter (req, file, cb) {
+  //console.log(req.file)
 
-    // To reject this file pass `false`, like so:
-    cb(null, false)
-
-
-  }
-  console.log(req.file)
   if ( !req.file.mimetype.startsWith( 'image/' ) ) {
     return res.status( 422 ).send('Solo puedes subir imágenes!');
+  } else {
+    gm('processing/uploads/'+req.file.originalname)
+    .resize(1920, 1080, '>')
+    .interlace("line")
+    .quality(92)
+    //.noProfile() // Destroza el color de la imágen
+    .write('processing/fulls/'+req.file.originalname, function (err) {
+      if (!err) {
+        gm('processing/uploads/'+req.file.originalname)
+        .resize(null, 480, '>')
+        .interlace("line")
+        .quality(80)
+        //.noProfile() // Destroza el color de la imágen
+        .write('processing/thumbs/'+req.file.originalname, function (err) {
+          if (!err) {
+            console.log('done');
+            return res.status( 200 ).send( req.file );
+          } else {
+            console.log(err);
+            return res.status( 422 ).send('Error al intentar procesar la imágen full.');
+          }
+        });
+        //return res.status( 200 ).send( req.file );
+      } else {
+        console.log(err);
+        return res.status( 422 ).send('Error al intentar procesar la imágen full.');
+      }
+    });
   }
-  return res.status( 200 ).send( req.file );
+});
 
+app.post( '/download', function(req, res, next) {
+  console.log('DOWNLOAD GETTED');
+  console.log(req.body); // info about portada ...
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end();
 });
 
 // catch 404 and forward to error handler

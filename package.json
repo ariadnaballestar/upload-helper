@@ -15,6 +15,7 @@
     "morgan": "~1.7.0",
     "multer": "*",
     "serve-favicon": "~2.3.0",
-    "string.prototype.startswith": "^0.2.0"
+    "string.prototype.startswith": "^0.2.0",
+    "gm": "*"
   }
 }

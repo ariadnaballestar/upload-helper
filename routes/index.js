@@ -5,12 +5,17 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Ariadna Ballestar upload helper' });
 
-
-  res.render('index', { title: 'Express' });
-  //console.log(path.join(__dirname, '..' , 'processing'));
-  rmDir(path.join(__dirname, '..' , 'processing/uploads'))
+  // Remove all images when accessing the web:
+  clearDirectories();
 });
+
+function clearDirectories() {
+  rmDir(path.join(__dirname, '..' , 'processing/uploads'))
+  rmDir(path.join(__dirname, '..' , 'processing/fulls'))
+  rmDir(path.join(__dirname, '..' , 'processing/thumbs'))
+}
 
 function rmDir(dirPath) {
   console.log(dirPath);

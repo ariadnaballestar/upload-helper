@@ -1,6 +1,17 @@
-extends layout
-
-block content
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/dropzone.css')
+    link(rel='stylesheet', href='/stylesheets/cropper.css')
+  body
   h1= title
-  p Welcome to #{title}
-  form#upload-widget.dropzone(method="post", action="/upload")
+  p Para reiniciar todo el proceso, actualiza la página! (F5)
+  form#myDropzone.dropzone(method="post", action="/upload")
+  div#myCropper
+  script(src='/javascripts/jquery-3.1.0.min.js')
+  script(src='/javascripts/dropzone.js')
+  script(src='/javascripts/cropper.js')
+  script(src='/javascripts/main.js')
+
