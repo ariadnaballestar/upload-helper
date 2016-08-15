@@ -38,4 +38,4 @@ jspm_packages
 
 processing/*
 
-!processing/*/.gitkeep
+!.gitkeep
