@@ -13,3 +13,14 @@ img {
 }
 
 
+
+#preview {
+  overflow: hidden;
+  width: 415px; 
+  height: 310px;
+}
+
+.portada_pic, .initHidden{
+	visibility: hidden;
+	display:none;
+}

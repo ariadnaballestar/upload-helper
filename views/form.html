@@ -1,0 +1,41 @@
+<div id="step2" class="initHidden">
+  <form id="infoForm" autocomplete="off">
+    <div class="form-group">
+      <label for="title">Título de la sesión</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="Título corto de la sesión" required>
+    </div>
+    <div class="form-group">
+      <label for="fecha">Fecha de la sesión</label>
+      <input type="text" class="form-control" id="fecha" name="fecha" placeholder="1993-11-04" required>
+      <p class="help-block">Formato YYYY-MM-DD.</p>
+    </div>
+    <div class="form-group">
+      <label for="images">Nombre carpeta para las imagenes</label>
+      <input type="text" class="form-control" id="images" name="images" placeholder="nombre-carpeta" required>
+      <p class="help-block">Carpeta donde buscará las imágenes en /images/.</p>
+    </div>
+    <div class="form-group">
+      <label for="permalink">Enlace personalizado </label>
+      <input type="text" class="form-control" id="permalink" name="permalink" placeholder="nombre-sesion" required>
+      <p class="help-block">ej: ariadnaballestar.com/sesiones/nombre-sesion</p>
+    </div>
+    <div class="form-group">
+      <label for="description">Descripción de la sesión</label>
+      <input type="text" class="form-control" id="description" name="description" placeholder="Descripción larga de la sesión" required></input>
+    </div>
+    <div class="form-group">
+      <label for="numColab">Número de colaboradores</label>
+      <input type="number" class="form-control" id="numColab" name="numColab"  max="30" placeholder="" required>
+      <p class="help-block">Ojo, cada vez que esto se modifique se borraran todas las colaboraciones que se hayan escrito</p>
+    </div>
+    <div id="divColaboradores">
+      
+    </div>
+
+    <button type="submit" id="uploadButton" class="btn btn-primary btn-lg btn-block">Generar</button>
+  </form>
+</div>
+<div id="step3" class="initHidden">
+  <br><br>
+  <a id="downloadButton" href="#" class="btn btn-success btn-lg btn-block">Descargar</a>
+</div>
