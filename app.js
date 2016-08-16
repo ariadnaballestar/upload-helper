@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var archiver = require('archiver');
+var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -42,6 +44,35 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/i', express.static(path.join(__dirname, 'processing')));
 app.use('/r', express.static(path.join(__dirname, 'result')));
 app.use('/result', express.static(path.join(__dirname, 'result')));
+
+cleanUp();
+function cleanUp() {
+
+  rimraf('processing', function(err) {
+    if (err) { throw err; }
+
+    mkdirp('processing/uploads', function (err) {
+      if (err) { throw err; }
+      // done
+    });
+    
+    mkdirp('processing/thumbs', function (err) {
+      if (err) { throw err; }
+      // done
+    });
+
+    mkdirp('processing/fulls', function (err) {
+      if (err) { throw err; }
+      // done
+    });
+
+    mkdirp('result', function (err) {
+      if (err) { throw err; }
+      // done
+    });
+  })
+}
+
 
 
 
@@ -106,23 +137,9 @@ app.post( '/portada',  function(req, res, next) {
     });
 });
 
-function clearConfigFiles(callback) {
-  dirPath = path.join(__dirname, 'processing')
-  try { var files = fs.readdirSync(dirPath); }
-  catch(e) { return; }
-  if (files.length > 0)
-    for (var i = 0; i < files.length; i++) {
-      var filePath = dirPath + '/' + files[i];
-      if (fs.statSync(filePath).isFile())
-        fs.unlinkSync(filePath);
-    }
-  callback();
-}
-
 
 
 app.post( '/generate', function(req, res, next) {
-//clearConfigFiles(function() {
   console.log('Starting download process')
   var baseFileName = req.body.fecha+'-'+req.body.permalink;
   var fileName = baseFileName+'.md';
@@ -212,7 +229,6 @@ colaboradores:
 
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   
-//}); // clearfiles
 });
 
 
