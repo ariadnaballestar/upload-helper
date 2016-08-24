@@ -47,6 +47,8 @@ function cropperInit() {
   cropper = new Cropper(image, {
     aspectRatio: 83 / 62,
     preview: '#preview',
+    zoomable: false,
+    highlight: false,
     minCropBoxWidth: '415',
     crop: function(e) {
       console.log("e.detail.x: "+e.detail.x);
