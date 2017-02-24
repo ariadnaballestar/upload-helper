@@ -159,6 +159,9 @@ images: ${req.body.images}
 # Enlace personalizado ej: ariadnaballestar.com/sesiones/NOMBRESESION
 permalink: /${req.body.permalink}
 
+# Texto que se insertara en la etiqueta alt de todas las imagenes de la sesión
+altimages: "${req.body.altimages}"
+
 # Información detallada sobre la sesión
 description: "${req.body.description}"
 
