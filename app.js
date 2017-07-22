@@ -150,7 +150,7 @@ app.post( '/portada',  function(req, res, next) {
 
 app.post( '/generate', function(req, res, next) {
   console.log('Starting download process')
-  var flickrGalleryId = req.body.flickrgalleryid;
+  var flickrGalleryId = Number(req.body.flickrgalleryid);
 
 
   Flickr.authenticate(flickrOptions, function(error, flickr) {
