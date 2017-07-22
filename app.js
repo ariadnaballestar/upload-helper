@@ -156,6 +156,7 @@ app.post( '/generate', function(req, res, next) {
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: req.params.galleryid,
+      user_id: flickr.options.user_id,
       page: 1,
       per_page: 1,
       extras: 'url_m'
