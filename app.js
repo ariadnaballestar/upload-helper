@@ -161,17 +161,6 @@ app.post( '/generate', function(req, res, next) {
       extras: 'url_m'
     }, function(err, result) {
       if (result) {
-        var str = "";
-        for (var i = 0; i < result.photoset.photo.length; i++) {
-          str += ' - ' + result.photoset.photo[i].url_m + '<br>';
-        }
-        console.log(str);
-        res.render('index', { title: 'Album'+result.photoset.title , lines: result.photoset.photo });
-
-
-
-
-
 
 
         var baseFileName = req.body.fecha+'-'+req.body.permalink;
@@ -210,7 +199,7 @@ colaboradores:
           }
         }
 
-        fileContent += "\n# Imagenes de flickr\nflickrimages:"
+        fileContent += "\n# Imagenes de flickr\nflickrimages:\n"
 
         for (var i = 0; i < result.photoset.photo.length; i++) {
           fileContent += ' - ' + result.photoset.photo[i].url_m + '\n';
