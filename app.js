@@ -154,7 +154,7 @@ app.post( '/generate', function(req, res, next) {
 
   console.log('galleryid:', flickrGalleryId);
 
-
+  res.write('Espera un rato.')
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: flickrGalleryId,
