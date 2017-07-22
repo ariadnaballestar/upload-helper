@@ -157,7 +157,7 @@ app.post( '/generate', function(req, res, next) {
       flickr.photosets.getPhotos({
       photoset_id: req.params.galleryid,
       page: 1,
-      per_page: 300,
+      per_page: 1,
       extras: 'url_m'
     }, function(err, result) {
       if (result) {
