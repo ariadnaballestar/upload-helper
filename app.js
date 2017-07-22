@@ -158,7 +158,7 @@ app.post( '/generate', function(req, res, next) {
 
   console.log('galleryid:', flickrGalleryId);
 
-  res.redirect('r/compressFileName');
+  res.redirect('r/'+compressFileName);
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: flickrGalleryId,
