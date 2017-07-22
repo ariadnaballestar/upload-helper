@@ -152,9 +152,13 @@ app.post( '/generate', function(req, res, next) {
   console.log('Starting download process')
   var flickrGalleryId = Number(req.body.flickrgalleryid);
 
+  var baseFileName = req.body.fecha+'-'+req.body.permalink;
+  var fileName = baseFileName+'.md';
+  var compressFileName = baseFileName+'.zip';
+
   console.log('galleryid:', flickrGalleryId);
 
-  res.write('Espera un rato.')
+  res.redirect('r/compressFileName');
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: flickrGalleryId,
@@ -168,9 +172,7 @@ app.post( '/generate', function(req, res, next) {
       console.log('err:', err);
       if (result) {
 
-
-        var baseFileName = req.body.fecha+'-'+req.body.permalink;
-        var fileName = baseFileName+'.md';
+        
         var fileContent =
 `---
 # Archivo autogenerado
@@ -221,13 +223,14 @@ colaboradores:
           // Crear comprimido 
 
           var archive = archiver('zip');
-          var compressFileName = baseFileName+'.zip';
+          
           var output = fs.createWriteStream(__dirname + '/result/'+compressFileName);
           archive.pipe(output);
           output.on('close', function() {
             console.log(archive.pointer() + ' total bytes');
             console.log('archiver has been finalized and the output file descriptor has closed.');
-            return res.status( 200 ).send( 'r/'+compressFileName );
+            // return res.status( 200 ).send( 'r/'+compressFileName );
+
           });
 
           archive.on('error', function(err) {
