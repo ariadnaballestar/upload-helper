@@ -158,7 +158,10 @@ app.post( '/generate', function(req, res, next) {
 
   console.log('galleryid:', flickrGalleryId);
 
-  res.redirect('r/'+compressFileName);
+  res.render('error', {
+      message: 'Podras descargar el fichero de la siguiente URL en un par de minutos:',
+      url: 'r/'+compressFileName
+    });
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: flickrGalleryId,
