@@ -160,6 +160,8 @@ app.post( '/generate', function(req, res, next) {
       per_page: 1,
       extras: 'url_m'
     }, function(err, result) {
+      console.log('result:', result);
+      console.log('err:', err);
       if (result) {
 
 
