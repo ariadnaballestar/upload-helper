@@ -152,6 +152,8 @@ app.post( '/generate', function(req, res, next) {
   console.log('Starting download process')
   var flickrGalleryId = Number(req.body.flickrgalleryid);
 
+  console.log('galleryid:', req.params.galleryid);
+
 
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
