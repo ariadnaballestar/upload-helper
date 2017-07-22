@@ -12,6 +12,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",
+    "flickrapi": "^0.6.0",
     "gm": "*",
     "imagemagick": "*",
     "jade": "~1.11.0",

@@ -17,6 +17,15 @@ var users = require('./routes/users');
 var multer  = require('multer')
 //var upload = multer({ dest: 'uploads/' })
 
+var Flickr = require("flickrapi"),
+    flickrOptions = {
+      api_key: process.env.API_KEY,
+      secret: process.env.SECRET,
+      user_id: process.env.USER_ID,
+      access_token: process.env.ACCESS_TOKEN,
+      access_token_secret: process.env.ACCESS_TOKEN_SECRET
+    };
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'processing/uploads/')
@@ -141,9 +150,33 @@ app.post( '/portada',  function(req, res, next) {
 
 app.post( '/generate', function(req, res, next) {
   console.log('Starting download process')
-  var baseFileName = req.body.fecha+'-'+req.body.permalink;
-  var fileName = baseFileName+'.md';
-  var fileContent =
+  var flickrGalleryId = req.body.flickrgalleryid;
+
+
+  Flickr.authenticate(flickrOptions, function(error, flickr) {
+      flickr.photosets.getPhotos({
+      photoset_id: req.params.galleryid,
+      page: 1,
+      per_page: 300,
+      extras: 'url_m'
+    }, function(err, result) {
+      if (result) {
+        var str = "";
+        for (var i = 0; i < result.photoset.photo.length; i++) {
+          str += ' - ' + result.photoset.photo[i].url_m + '<br>';
+        }
+        console.log(str);
+        res.render('index', { title: 'Album'+result.photoset.title , lines: result.photoset.photo });
+
+
+
+
+
+
+
+        var baseFileName = req.body.fecha+'-'+req.body.permalink;
+        var fileName = baseFileName+'.md';
+        var fileContent =
 `---
 # Archivo autogenerado
 
@@ -169,66 +202,82 @@ description: "${req.body.description}"
 colaboradores:
 `;
 
-  for (var i = 0; i < req.body.colaboradores.length; i++) {
-    fileContent += ` - title: "${req.body.colaboradores[i].title}"\n`;
-    fileContent += `   name: "${req.body.colaboradores[i].name}"\n`;
-    if (req.body.colaboradores[i].link) {
-      fileContent += `   link: "${req.body.colaboradores[i].link}"\n`;
-    }
-  }
-  fileContent += '---';
+        for (var i = 0; i < req.body.colaboradores.length; i++) {
+          fileContent += ` - title: "${req.body.colaboradores[i].title}"\n`;
+          fileContent += `   name: "${req.body.colaboradores[i].name}"\n`;
+          if (req.body.colaboradores[i].link) {
+            fileContent += `   link: "${req.body.colaboradores[i].link}"\n`;
+          }
+        }
 
-  fs.writeFile(path.join(__dirname, 'processing', fileName), fileContent, function(err) {
+        fileContent += "\n# Imagenes de flickr\nflickrimages:"
 
-    if(err) {
-        return console.log(err);
-    }
-    // Crear comprimido 
+        for (var i = 0; i < result.photoset.photo.length; i++) {
+          fileContent += ' - ' + result.photoset.photo[i].url_m + '\n';
+        }
 
-    var archive = archiver('zip');
-    var compressFileName = baseFileName+'.zip';
-    var output = fs.createWriteStream(__dirname + '/result/'+compressFileName);
-    archive.pipe(output);
-    output.on('close', function() {
-      console.log(archive.pointer() + ' total bytes');
-      console.log('archiver has been finalized and the output file descriptor has closed.');
-      return res.status( 200 ).send( 'r/'+compressFileName );
-    });
+        fileContent += '---';
 
-    archive.on('error', function(err) {
-      throw err;
-    });
+        fs.writeFile(path.join(__dirname, 'processing', fileName), fileContent, function(err) {
 
-    var folderName = req.body.images;
-    archive.file(__dirname + '/processing/portada.jpg', { name: '/images/'+folderName+'/portada.jpg' });
-    archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
-    
-/*
-    var files = [__dirname + '/processing/'+ fileName , __dirname + '/processing/portada.jpg'];
+          if(err) {
+              return console.log(err);
+          }
+          // Crear comprimido 
 
-    for(var i in files) {
-      if (path.basename(files[i]) == 'portada.jpg'){
-        archive.file(files[i], { name: '/images/'+path.basename(files[i]) });
-      } else {
-        archive.file(files[i], { name: path.basename(files[i]) });
+          var archive = archiver('zip');
+          var compressFileName = baseFileName+'.zip';
+          var output = fs.createWriteStream(__dirname + '/result/'+compressFileName);
+          archive.pipe(output);
+          output.on('close', function() {
+            console.log(archive.pointer() + ' total bytes');
+            console.log('archiver has been finalized and the output file descriptor has closed.');
+            return res.status( 200 ).send( 'r/'+compressFileName );
+          });
+
+          archive.on('error', function(err) {
+            throw err;
+          });
+
+          var folderName = req.body.images;
+          archive.file(__dirname + '/processing/portada.jpg', { name: '/images/'+folderName+'/portada.jpg' });
+          archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
+          
+      /*
+          var files = [__dirname + '/processing/'+ fileName , __dirname + '/processing/portada.jpg'];
+
+          for(var i in files) {
+            if (path.basename(files[i]) == 'portada.jpg'){
+              archive.file(files[i], { name: '/images/'+path.basename(files[i]) });
+            } else {
+              archive.file(files[i], { name: path.basename(files[i]) });
+            }
+          }
+      */
+          var images = [__dirname + '/processing/thumbs', __dirname + '/processing/fulls']
+
+          for(var i in images) {
+            archive.directory(images[i], '/images/'+folderName+images[i].replace(__dirname + '/processing', ''));
+          }
+
+          archive.finalize(function(err, bytes) {
+            if (err) {
+              throw err;
+            }
+
+            console.log(bytes + ' total bytes');
+          });
+          
+        }); 
+
+
       }
-    }
-*/
-    var images = [__dirname + '/processing/thumbs', __dirname + '/processing/fulls']
+      
 
-    for(var i in images) {
-      archive.directory(images[i], '/images/'+folderName+images[i].replace(__dirname + '/processing', ''));
-    }
-
-    archive.finalize(function(err, bytes) {
-      if (err) {
-        throw err;
-      }
-
-      console.log(bytes + ' total bytes');
     });
-    
-  }); 
+  });
+
+
 
   //res.writeHead(200, {'Content-Type': 'text/plain'});
   
