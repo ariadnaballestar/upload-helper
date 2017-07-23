@@ -127,6 +127,8 @@ app.post( '/upload', upload.single( 'file' ), function( req, res, next ) {
 });
 
 
+
+
 app.post( '/portada',  function(req, res, next) {
   console.log('PORTADA GETTED');
   gm('processing/uploads/'+req.body.imgName)
@@ -146,6 +148,25 @@ app.post( '/portada',  function(req, res, next) {
     });
 });
 
+
+app.get('/f/:galleryid', function(req, res, next) {
+  Flickr.authenticate(flickrOptions, function(error, flickr) {
+      flickr.photosets.getPhotos({
+      photoset_id: req.params.galleryid,
+      user_id: flickrOptions.user_id,
+      page: 1,
+      per_page: 200,
+      extras: 'url_m',
+      authenticated: true
+    }, function(err, result) {
+      if (result) {
+        console.log(JSON.stringify(result));
+        res.render('index', { title: result.photoset.title , lines: result.photoset.photo });
+      }
+      
+    });
+  });
+});
 
 
 app.post( '/generate', function(req, res, next) {
