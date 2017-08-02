@@ -309,6 +309,9 @@ colaboradores:
             if (err) {
               throw err;
             }
+
+            console.log(bytes + ' total bytes');
+            
             let message = {
 
                 // Comma separated list of recipients
@@ -332,7 +335,19 @@ colaboradores:
                 ]
             };
 
-            console.log(bytes + ' total bytes');
+            console.log('Sending Mail');
+            transporter.sendMail(message, (error, info) => {
+                if (error) {
+                    console.log('Error occurred');
+                    console.log(error.message);
+                    return;
+                }
+                console.log('Message sent successfully!');
+                console.log('Server responded with "%s"', info.response);
+                transporter.close();
+            });
+
+            
           });
           
         }); 
