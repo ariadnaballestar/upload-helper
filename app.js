@@ -292,7 +292,7 @@ colaboradores:
                   }
               ]
           };
-          
+
           output.on('close', function() {
             console.log('Closed with '+ archive.pointer() + ' total bytes');
             console.log('archiver has been finalized and the output file descriptor has closed.');
@@ -322,7 +322,7 @@ colaboradores:
 
           var folderName = req.body.images;
           archive.file(__dirname + '/processing/portada.jpg', { name: '/images/'+folderName+'/portada.jpg' });
-          // archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
+          archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
           
       /*
           var files = [__dirname + '/processing/'+ fileName , __dirname + '/processing/portada.jpg'];
