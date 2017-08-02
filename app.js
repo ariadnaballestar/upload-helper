@@ -188,7 +188,11 @@ app.get('/f/:galleryid', function(req, res, next) {
 
 app.post( '/generate', function(req, res, next) {
   console.log('Starting download process')
-  var flickrGalleryId = Number(req.body.flickrgalleryid);
+  console.log('START BODY:');
+
+  console.log(req.body.fecha);
+  console.log('END BODY');
+  var flickrGalleryId = req.body.flickrgalleryid; //Number(req.body.flickrgalleryid);
 
   var baseFileName = req.body.fecha+'-'+req.body.permalink;
   var fileName = baseFileName+'.md';
@@ -308,7 +312,7 @@ colaboradores:
             let message = {
 
                 // Comma separated list of recipients
-                to: process.env.MAIL_FROM,
+                to: process.env.MAIL_TO,
 
                 // Subject of the message
                 subject: 'Información sobre la sesión '+req.body.title, //

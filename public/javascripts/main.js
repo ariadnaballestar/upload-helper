@@ -109,8 +109,9 @@ $("#numColab").on("change paste keyup", function() {
 
 
 $("#infoForm").submit(function(e) {
-    $("body").html("Se está enviando la petición...")
+    //$("body").html("Se está enviando la petición...")
 
+    $("#uploadButton").prop("disabled", true);
     
     var url = "/generate"; 
 
