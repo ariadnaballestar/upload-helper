@@ -187,11 +187,8 @@ app.get('/f/:galleryid', function(req, res, next) {
 
 
 app.post( '/generate', function(req, res, next) {
-  console.log('Starting download process')
-  console.log('START BODY:');
+  console.log('Starting download process');
 
-  console.log(req.body.fecha);
-  console.log('END BODY');
   var flickrGalleryId = req.body.flickrgalleryid; //Number(req.body.flickrgalleryid);
 
   var baseFileName = req.body.fecha+'-'+req.body.permalink;
@@ -265,16 +262,57 @@ colaboradores:
           }
           // Crear comprimido 
 
+
           var archive = archiver('zip');
 
           var outputRoute = (__dirname + '/result/'+compressFileName);
           
           var output = fs.createWriteStream(outputRoute);
           archive.pipe(output);
+
+          let message = {
+
+              // Comma separated list of recipients
+              to: process.env.MAIL_TO,
+
+              // Subject of the message
+              subject: 'Información sobre la sesión '+req.body.title, //
+
+              // plaintext body
+              text: 'Puedes descargar el comprimido adjunto.',
+
+              // An array of attachments
+              attachments: [
+
+                  // File Stream attachment
+                  {
+                      filename: compressFileName,
+                      path: outputRoute,
+                      cid: process.env.MAIL_USER // should be as unique as possible
+                  }
+              ]
+          };
+          
           output.on('close', function() {
-            console.log(archive.pointer() + ' total bytes');
+            console.log('Closed with '+ archive.pointer() + ' total bytes');
             console.log('archiver has been finalized and the output file descriptor has closed.');
             // return res.status( 200 ).send( 'r/'+compressFileName );
+
+
+            
+
+            console.log('Sending Mail');
+            transporter.sendMail(message, (error, info) => {
+                if (error) {
+                    console.log('Error occurred');
+                    console.log(error.message);
+                    return;
+                }
+                console.log('Message sent successfully!');
+                console.log('Server responded with "%s"', info.response);
+                transporter.close();
+            });
+
 
           });
 
@@ -310,43 +348,7 @@ colaboradores:
               throw err;
             }
 
-            console.log(bytes + ' total bytes');
-            
-            let message = {
-
-                // Comma separated list of recipients
-                to: process.env.MAIL_TO,
-
-                // Subject of the message
-                subject: 'Información sobre la sesión '+req.body.title, //
-
-                // plaintext body
-                text: 'Puedes descargar el comprimido adjunto.',
-
-                // An array of attachments
-                attachments: [
-
-                    // File Stream attachment
-                    {
-                        filename: compressFileName,
-                        path: outputRoute,
-                        cid: process.env.MAIL_USER // should be as unique as possible
-                    }
-                ]
-            };
-
-            console.log('Sending Mail');
-            transporter.sendMail(message, (error, info) => {
-                if (error) {
-                    console.log('Error occurred');
-                    console.log(error.message);
-                    return;
-                }
-                console.log('Message sent successfully!');
-                console.log('Server responded with "%s"', info.response);
-                transporter.close();
-            });
-
+            console.log('Finalized with ' + bytes + ' bytes');
             
           });
           
