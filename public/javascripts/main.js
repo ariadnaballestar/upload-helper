@@ -109,7 +109,9 @@ $("#numColab").on("change paste keyup", function() {
 
 
 $("#infoForm").submit(function(e) {
+    $("body").html("Se está enviando la petición...")
 
+    
     var url = "/generate"; 
 
     $.ajax({
@@ -118,10 +120,13 @@ $("#infoForm").submit(function(e) {
            data: $("#infoForm").serialize(), // serializes the form's elements.
            success: function(data)
            {
+              $("body").html('Petición recibida. Recibirás un e-mail cuando el proceso haya finalizado.');
+/*
               $("#downloadButton").attr("href", data)
               $("#step3").css("visibility", "visible");
               $("#step3").css("display", "block");
               goToByScroll('step3')
+*/              
                // // show response from server.
            }
          });

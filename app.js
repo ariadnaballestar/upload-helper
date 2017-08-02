@@ -26,6 +26,23 @@ var Flickr = require("flickrapi"),
       access_token_secret: process.env.ACCESS_TOKEN_SECRET
     };
 
+
+
+const nodemailer = require('nodemailer');
+
+let transporter = nodemailer.createTransport({
+    service: process.env.MAIL_SERVICE, // TO-DO: Create these env vars
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
+    }
+}, {
+    // default message fields
+    from: process.env.MAIL_FROM
+});
+
+
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'processing/uploads/')
@@ -179,7 +196,7 @@ app.post( '/generate', function(req, res, next) {
 
   console.log('galleryid:', flickrGalleryId);
 
-  res.status( 200 ).send( 'r/'+compressFileName );
+  res.status( 200 ).send( 'Iniciando la petición a flickr...' );
   
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
@@ -245,8 +262,10 @@ colaboradores:
           // Crear comprimido 
 
           var archive = archiver('zip');
+
+          var outputRoute = (__dirname + '/result/'+compressFileName);
           
-          var output = fs.createWriteStream(__dirname + '/result/'+compressFileName);
+          var output = fs.createWriteStream(outputRoute);
           archive.pipe(output);
           output.on('close', function() {
             console.log(archive.pointer() + ' total bytes');
@@ -261,7 +280,7 @@ colaboradores:
 
           var folderName = req.body.images;
           archive.file(__dirname + '/processing/portada.jpg', { name: '/images/'+folderName+'/portada.jpg' });
-          archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
+          // archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
           
       /*
           var files = [__dirname + '/processing/'+ fileName , __dirname + '/processing/portada.jpg'];
@@ -274,16 +293,40 @@ colaboradores:
             }
           }
       */
+      /*
           var images = [__dirname + '/processing/thumbs', __dirname + '/processing/fulls']
 
           for(var i in images) {
             archive.directory(images[i], '/images/'+folderName+images[i].replace(__dirname + '/processing', ''));
           }
+          */
 
           archive.finalize(function(err, bytes) {
             if (err) {
               throw err;
             }
+            let message = {
+
+                // Comma separated list of recipients
+                to: process.env.MAIL_FROM,
+
+                // Subject of the message
+                subject: 'Información sobre la sesión '+req.body.title, //
+
+                // plaintext body
+                text: 'Puedes descargar el comprimido adjunto.',
+
+                // An array of attachments
+                attachments: [
+
+                    // File Stream attachment
+                    {
+                        filename: compressFileName,
+                        path: outputRoute,
+                        cid: process.env.MAIL_USER // should be as unique as possible
+                    }
+                ]
+            };
 
             console.log(bytes + ' total bytes');
           });

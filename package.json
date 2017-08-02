@@ -19,6 +19,7 @@
     "mkdirp": "^0.5.1",
     "morgan": "~1.7.0",
     "multer": "*",
+    "nodemailer": "^4.0.1",
     "rimraf": "^2.5.4",
     "serve-favicon": "~2.3.0",
     "string.prototype.startswith": "^0.2.0"
