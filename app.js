@@ -246,8 +246,9 @@ colaboradores:
             fileContent += `   link: "${req.body.colaboradores[i].link}"\n`;
           }
         }
-
-        fileContent += "\n# Imagenes de flickr\nflickrimages:\n"
+        fileContent += "\n# Imagenes de flickr\n"
+        fileContent += "flickralbum: "+flickrGalleryId+"\n"
+        fileContent += "flickrimages:\n"
 
         for (var i = 0; i < result.photoset.photo.length; i++) {
           fileContent += ' - ' + result.photoset.photo[i].url_m + '\n';
