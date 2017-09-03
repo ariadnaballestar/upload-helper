@@ -1,6 +1,18 @@
 <div id="step2" class="initHidden">
   <form id="infoForm" autocomplete="off">
     <div class="form-group">
+      <br><label>Categorias</label><br>
+      <div class="checkbox-inline">
+        <label><input name="categories" type="checkbox" value="personal">Book personal</label>
+      </div>
+      <div class="checkbox-inline">
+        <label><input name="categories" type="checkbox" value="parejas">Book en pareja</label>
+      </div>
+      <div class="checkbox-inline">
+        <label><input name="categories" type="checkbox" value="familiar">Book familiar</label>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="title">Título de la sesión</label>
       <input type="text" class="form-control" id="title" name="title" placeholder="Título corto de la sesión" required>
     </div>
@@ -37,7 +49,7 @@
       <p class="help-block">Ojo, cada vez que esto se modifique se borraran todas las colaboraciones que se hayan escrito</p>
     </div>
     <div id="divColaboradores">
-      
+
     </div>
 
     <button type="submit" id="uploadButton" class="btn btn-primary btn-lg btn-block">Generar</button>

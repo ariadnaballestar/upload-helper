@@ -4,13 +4,13 @@ Dropzone.options.myDropzone = {
       if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
         console.log('todo subido');
       }
-    }); 
+    });
   }, */
   init: function () {
     this.on("addedfile", function(file) {
       // Add default option box for each preview.
       var portadaRadioButton = Dropzone.createElement('<div class="portada_pic"><input type="radio" name="defaultPic" value="'+file.name+'" />Portada</div>');
-      
+
       file.previewElement.appendChild(portadaRadioButton);
 
     });
@@ -18,7 +18,7 @@ Dropzone.options.myDropzone = {
     this.on("queuecomplete", function (file) {
       if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
         $('#myDropzone input').on('change', function() {
-            var portadaName = $('input[name=defaultPic]:checked', '#myDropzone').val(); 
+            var portadaName = $('input[name=defaultPic]:checked', '#myDropzone').val();
             var url = '/i/uploads/'+portadaName;
             var htmlCropContent = '<img id="image" src="'+url+'">';
             $('#myCropper').html(htmlCropContent);
@@ -30,7 +30,7 @@ Dropzone.options.myDropzone = {
 
         $(".portada_pic").css("visibility", "visible");
         $(".portada_pic").css("display", "block");
-        
+
         //var portadapic = $('input[name=defaultPic]:checked', '#myDropzone').val();
         //alert(portadapic);
       }
@@ -68,7 +68,7 @@ $( "#guardarPortada" ).click(function() {
   $.ajax({
       type: "POST",
       url: "/portada",
-      data: { 
+      data: {
         imgName: namePortada,
         width: cropData.width,
         height: cropData.height,
@@ -112,8 +112,8 @@ $("#infoForm").submit(function(e) {
     //$("body").html("Se está enviando la petición...")
 
     $("#uploadButton").prop("disabled", true);
-    
-    var url = "/generate"; 
+
+    var url = "/generate";
 
     $.ajax({
            type: "POST",
@@ -127,7 +127,7 @@ $("#infoForm").submit(function(e) {
               $("#step3").css("visibility", "visible");
               $("#step3").css("display", "block");
               goToByScroll('step3')
-*/              
+*/
                // // show response from server.
            }
          });

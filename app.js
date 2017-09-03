@@ -81,7 +81,7 @@ function cleanUp() {
       if (err) { throw err; }
       // done
     });
-    
+
     mkdirp('processing/thumbs', function (err) {
       if (err) { throw err; }
       // done
@@ -180,13 +180,14 @@ app.get('/f/:galleryid', function(req, res, next) {
         console.log(JSON.stringify(result));
         res.render('index', { title: result.photoset.title , lines: result.photoset.photo });
       }
-      
+
     });
   });
 });
 
 
 app.post( '/generate', function(req, res, next) {
+  console.log('BOODY:', req.body);
   console.log('Starting download process');
 
   var flickrGalleryId = req.body.flickrgalleryid; //Number(req.body.flickrgalleryid);
@@ -198,7 +199,7 @@ app.post( '/generate', function(req, res, next) {
   console.log('galleryid:', flickrGalleryId);
 
   res.status( 200 ).send( 'Iniciando la petición a flickr...' );
-  
+
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
       photoset_id: flickrGalleryId,
@@ -212,13 +213,17 @@ app.post( '/generate', function(req, res, next) {
       console.log('err:', err);
       if (result) {
 
-        
+        var categoriesStr = "["+req.body.categories.join(", ")+"]";
+
         var fileContent =
 `---
 # Archivo autogenerado
 
 # No tocar
 layout: gallery
+
+# Categoria
+categories: ${categoriesStr}
 
 # Título en la página /sesiones
 title: "${req.body.title}"
@@ -260,13 +265,13 @@ colaboradores:
           if(err) {
               return console.log(err);
           }
-          // Crear comprimido 
+          // Crear comprimido
 
 
           var archive = archiver('zip');
 
           var outputRoute = (__dirname + '/result/'+compressFileName);
-          
+
           var output = fs.createWriteStream(outputRoute);
           archive.pipe(output);
 
@@ -299,7 +304,7 @@ colaboradores:
             // return res.status( 200 ).send( 'r/'+compressFileName );
 
 
-            
+
 
             console.log('Sending Mail');
             transporter.sendMail(message, (error, info) => {
@@ -323,7 +328,7 @@ colaboradores:
           var folderName = req.body.images;
           archive.file(__dirname + '/processing/portada.jpg', { name: '/images/'+folderName+'/portada.jpg' });
           archive.file(__dirname + '/processing/'+ fileName, { name: '/_posts/'+fileName });
-          
+
       /*
           var files = [__dirname + '/processing/'+ fileName , __dirname + '/processing/portada.jpg'];
 
@@ -349,14 +354,14 @@ colaboradores:
             }
 
             console.log('Finalized with ' + bytes + ' bytes');
-            
+
           });
-          
-        }); 
+
+        });
 
 
       }
-      
+
 
     });
   });
@@ -364,7 +369,7 @@ colaboradores:
 
 
   //res.writeHead(200, {'Content-Type': 'text/plain'});
-  
+
 });
 
 
