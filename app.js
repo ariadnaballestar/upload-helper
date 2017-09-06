@@ -244,12 +244,14 @@ permalink: /${req.body.permalink}
 # Texto que se insertara en la etiqueta alt de todas las imagenes de la sesión
 altimages: "${req.body.altimages}"
 
-# Información detallada sobre la sesión
-description: "${req.body.description}"
-
 # Colaboradores
 colaboradores:
 `;
+
+/*
+# Información detallada sobre la sesión
+description: "${req.body.description}"
+ */
 
         for (var i = 0; i < req.body.colaboradores.length; i++) {
           fileContent += ` - title: "${req.body.colaboradores[i].title}"\n`;
