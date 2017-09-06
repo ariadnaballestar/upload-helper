@@ -216,8 +216,11 @@ app.post( '/generate', function(req, res, next) {
       console.log('result:', result);
       console.log('err:', err);
       if (result) {
+        var categoriesStr = '';
+        if (req.body.categories) {
+          categoriesStr  = "["+req.body.categories.join(", ")+"]";
+        }
 
-        var categoriesStr = "["+req.body.categories.join(", ")+"]";
 
         var fileContent =
 `---
