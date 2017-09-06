@@ -198,7 +198,11 @@ app.post( '/generate', function(req, res, next) {
 
   console.log('galleryid:', flickrGalleryId);
 
+  console.log('content:' + req.body.content);
+  // TODO: Add content to fileContent
+
   res.status( 200 ).send( 'Iniciando la petición a flickr...' );
+
 
   Flickr.authenticate(flickrOptions, function(error, flickr) {
       flickr.photosets.getPhotos({
@@ -260,6 +264,7 @@ colaboradores:
         }
 
         fileContent += '---';
+        fileContent += 'req.body.content';
 
         fs.writeFile(path.join(__dirname, 'processing', fileName), fileContent, function(err) {
 

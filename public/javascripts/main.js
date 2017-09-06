@@ -1,3 +1,7 @@
+var simplemde = new SimpleMDE({
+  spellChecker: false
+});
+
 Dropzone.options.myDropzone = {
   /* init: function () {
     this.on("complete", function (file) {
@@ -110,10 +114,11 @@ $("#numColab").on("change paste keyup", function() {
 
 $("#infoForm").submit(function(e) {
     //$("body").html("Se está enviando la petición...")
-
-    $("#uploadButton").prop("disabled", true);
+    $("#content").val(simplemde.value());
 
     var url = "/generate";
+
+    $("#uploadButton").prop("disabled", true);
 
     $.ajax({
            type: "POST",
