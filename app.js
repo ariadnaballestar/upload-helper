@@ -266,8 +266,8 @@ colaboradores:
           fileContent += ' - ' + result.photoset.photo[i].url_m + '\n';
         }
 
-        fileContent += '---';
-        fileContent += 'req.body.content';
+        fileContent += '---\n';
+        fileContent += req.body.content;
 
         fs.writeFile(path.join(__dirname, 'processing', fileName), fileContent, function(err) {
 
