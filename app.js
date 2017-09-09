@@ -218,7 +218,12 @@ app.post( '/generate', function(req, res, next) {
       if (result) {
         var categoriesStr = '';
         if (req.body.categories) {
-          categoriesStr  = "["+req.body.categories.join(", ")+"]";
+          if (req.body.categories instanceof Array) {
+            categoriesStr  = "["+req.body.categories.join(", ")+"]";
+          } else {
+            categoriesStr = req.body.categories;
+          }
+
         }
 
 
